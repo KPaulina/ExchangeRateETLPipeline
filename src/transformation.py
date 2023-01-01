@@ -15,5 +15,3 @@ def json_to_dataframe():
     df_exchange_rate = df_exchange_rate.rename(columns={'index': 'currency_code'})
     return df_exchange_rate[['currency_code', 'provider', 'time_last_update_utc', 'rates']]
 
-
-json_to_dataframe()
