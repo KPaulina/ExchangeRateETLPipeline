@@ -1,7 +1,7 @@
 import os
 from transformation import json_to_dataframe
 from sqlalchemy import create_engine
-import dotenv
+from const import DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT
 ''''
 Load data to the following table
     CREATE TABLE exchange_rate_PLN (
@@ -11,13 +11,6 @@ Load data to the following table
     rates numeric,
     updated_at varchar(6) default to_char(CURRENT_DATE, 'yyyymm')
 '''''
-dotenv.load_dotenv()
-
-DB_NAME = os.environ.get('POSTGRES_DB')
-DB_USER = os.environ.get('POSTGRES_USER')
-DB_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
-DB_HOST = os.environ.get('POSTGRES_HOST')
-DB_PORT = os.environ.get('POSTGRES_PORT')
 
 
 def load_data():
