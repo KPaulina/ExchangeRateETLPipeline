@@ -8,4 +8,4 @@ Simple ETL pipeline for exchange rate data taken from API
 #### requests
 
 ## The aim of the project
-Project created to gather data from API and load it to postgres
+Project created to gather exchange rate data from API and load it to postgres
