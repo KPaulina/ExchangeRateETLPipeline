@@ -3,6 +3,12 @@ import requests
 
 
 def api_scraper(url, file):
+    '''
+    Function that gets data about PLN exchange rate from API
+    :param url:
+    :param file:
+    :return:
+    '''
     res = requests.request("GET", url)
     json_data = res.json()
     try:

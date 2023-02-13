@@ -23,7 +23,11 @@ db = client.exchange_rate
 collection = db.PLN_json
 
 
-def load_data():
+def load_data_to_postgres():
+    '''
+    Function that loads chosen from json data to postgres
+    :return:
+    '''
     df_exchange_rate = json_to_dataframe()
     try:
         db = create_engine(f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
@@ -36,12 +40,20 @@ def load_data():
 
 
 def load_json_to_mongodb():
+    '''
+    Function that takes the whole json data into MongoDB
+    :return:
+    '''
     with open(os.path.join(DATA_DIR, f'exchange_rate_PLN_{DATE}.json'), 'r') as file:
         data = json.load(file)
     collection.insert_one(data)
 
 
 def list_of_dates() -> list[str]:
+    '''
+    Function that creates list of dates from the chosen start date and creates as many dates as needed
+    :return:
+    '''
     start = datetime.date(2023, 1, 11)
     number_of_days_between_the_oldest_file_and_now = 31
     date_list = []
@@ -53,6 +65,11 @@ def list_of_dates() -> list[str]:
 
 
 def bulk_load_of_old_json_files():
+    '''
+    Function that helps to load older data in json to MongoDB
+    :return:
+    '''
+    #list of dates that is needed in order to insert data into MongoDB
     dates = list_of_dates()
     for date in dates:
         try:

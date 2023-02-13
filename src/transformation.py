@@ -4,6 +4,10 @@ import os
 
 
 def json_to_dataframe() -> pd.DataFrame:
+    '''
+    Function that takes specific information from json to dataframe
+    :return:
+    '''
     df_exchange_rate = pd.read_json(os.path.join(DATA_DIR, f"exchange_rate_PLN_{DATE}.json"))
     df_exchange_rate.reset_index(inplace=True)
     df_exchange_rate = df_exchange_rate.rename(columns={'index': 'currency_code'})
