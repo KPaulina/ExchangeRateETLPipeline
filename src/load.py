@@ -1,11 +1,11 @@
 import json
-
+import datetime
 from pymongo import MongoClient
 import psycopg2
 from sqlalchemy.exc import OperationalError
 from transformation import json_to_dataframe
 from sqlalchemy import create_engine
-from const import DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DATE, DATA_DIR
+from const import DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DATE, DATA_DIR, MANGODB_CONNECTION
 import os
 ''''
 Load data to the following table
@@ -16,6 +16,11 @@ Load data to the following table
     rates numeric,
     updated_at varchar(6) default to_char(CURRENT_DATE, 'yyyymm')
 '''''
+
+#mongodb connection
+client = MongoClient(MANGODB_CONNECTION)
+db = client.exchange_rate
+collection = db.PLN_json
 
 
 def load_data():
@@ -31,9 +36,30 @@ def load_data():
 
 
 def load_json_to_mongodb():
-    client = MongoClient("mongodb://localhost:27017/")
-    db = client.exchange_rate
-    collection = db.PLN_json
     with open(os.path.join(DATA_DIR, f'exchange_rate_PLN_{DATE}.json'), 'r') as file:
         data = json.load(file)
     collection.insert_one(data)
+
+
+def list_of_dates() -> list[str]:
+    start = datetime.date(2023, 1, 11)
+    number_of_days_between_the_oldest_file_and_now = 31
+    date_list = []
+
+    for day in range(number_of_days_between_the_oldest_file_and_now):
+        date = (start + datetime.timedelta(days=day)).isoformat()
+        date_list.append(date)
+    return date_list
+
+
+def bulk_load_of_old_json_files():
+    dates = list_of_dates()
+    for date in dates:
+        try:
+            with open(os.path.join(DATA_DIR, f'exchange_rate_PLN_{date}.json'), 'r') as file:
+                data = json.load(file)
+                collection.insert_one(data)
+        except FileNotFoundError as error:
+            print(error)
+
+
