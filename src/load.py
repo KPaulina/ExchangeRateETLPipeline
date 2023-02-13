@@ -1,9 +1,12 @@
+import json
 
+from pymongo import MongoClient
 import psycopg2
 from sqlalchemy.exc import OperationalError
 from transformation import json_to_dataframe
 from sqlalchemy import create_engine
-from const import DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT
+from const import DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DATE, DATA_DIR
+import os
 ''''
 Load data to the following table
     CREATE TABLE exchange_rate_PLN (
@@ -26,3 +29,11 @@ def load_data():
     except OperationalError as error:
         print(f'Operational error: {error}')
 
+
+def load_json_to_mongodb():
+    client = MongoClient("mongodb://localhost:27017/")
+    db = client.exchange_rate
+    collection = db.PLN_json
+    with open(os.path.join(DATA_DIR, f'exchange_rate_PLN_{DATE}.json'), 'r') as file:
+        data = json.load(file)
+    collection.insert_one(data)

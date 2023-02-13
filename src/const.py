@@ -10,7 +10,7 @@ DATA_DIR = os.path.join(BASE_DIR, 'data')
 
 DATE = str(datetime.now())[:10]
 
-
+API_KEY = os.environ.get("API_KEY")
 DB_NAME = os.environ.get('POSTGRES_DB')
 DB_USER = os.environ.get('POSTGRES_USER')
 DB_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
