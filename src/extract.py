@@ -2,6 +2,7 @@ import json
 import requests
 
 
+
 def api_scraper(url, file):
     '''
     Function that gets data about PLN exchange rate from API
