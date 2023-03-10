@@ -12,9 +12,10 @@ Load data to the following table
     CREATE TABLE exchange_rate_PLN (
     id serial PRIMARY KEY not null,
     currency_code varchar(10),
+	provider varchar(50),
     time_last_update_utc varchar(50),
     rates numeric,
-    updated_at varchar(6) default to_char(CURRENT_DATE, 'yyyymm')
+    updated_at date)
 '''''
 
 #mongodb connection
@@ -31,8 +32,7 @@ def load_data_to_postgres():
     df_exchange_rate = json_to_dataframe()
     try:
         db = create_engine(f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
-        conn = db.connect()
-        df_exchange_rate.to_sql('exchange_rate_pln', conn, schema='public', if_exists='append', index=False)
+        df_exchange_rate.to_sql('exchange_rate_pln', db, schema='public', if_exists='append', index=False)
     except psycopg2.Error as error:
         print(f'Error: {error}')
     except OperationalError as error:
